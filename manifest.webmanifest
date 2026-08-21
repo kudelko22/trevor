@@ -1,0 +1,11 @@
+{
+  "name": "Trevor // Hudobný archív",
+  "short_name": "Trevor",
+  "lang": "sk",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#090806",
+  "theme_color": "#090806",
+  "description": "Prémiový čierno-zlatý hudobný archív Trevor."
+}
+
