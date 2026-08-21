@@ -121,22 +121,31 @@
       .search { border:none; border-bottom:1px solid var(--line); background:transparent; color:var(--ink); outline:none; padding:11px 0; width:260px; font:13px "DM Mono",monospace; }
       .search::placeholder { color:var(--muted); }
       .track-list { border-top:1px solid var(--line); }
-      .track { display:grid; grid-template-columns:55px 54px minmax(0,1.2fr) minmax(0,1fr) 82px 35px; gap:16px; align-items:center; min-height:78px; border-bottom:1px solid var(--line); padding:10px 7px; transition:background .18s,transform .18s; }
+      .track { display:grid; grid-template-columns:55px 54px minmax(0,1.2fr) minmax(0,1fr) 82px 68px; gap:16px; align-items:center; min-height:78px; border-bottom:1px solid var(--line); padding:10px 7px; transition:background .18s,transform .18s; }
       .track:hover,.track.active { background:rgba(231,192,106,.08); transform:translateX(7px); }
       .number { color:var(--muted); font:12px "DM Mono",monospace; }
       .cover { width:47px; height:47px; object-fit:cover; background:#1b2140; }
       .track-title { font-size:16px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
       .artist,.duration { color:var(--muted); font-size:14px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
       .duration { font-family:"DM Mono",monospace; font-size:12px; text-align:right; }
-      .listen { color:var(--cyan); font-size:18px; text-decoration:none; text-align:center; opacity:.7; transition:.2s; }
-      .listen:hover { opacity:1; transform:scale(1.2); }
+      .listen { display:inline-flex; align-items:center; justify-content:center; min-height:30px; padding:0 8px; color:#f7d982; border:1px solid rgba(231,192,106,.42); background:rgba(231,192,106,.06); font:500 9px "DM Mono",monospace; letter-spacing:.05em; text-decoration:none; opacity:.82; transition:.2s; }
+      .listen:hover { opacity:1; color:#171005; background:var(--lime); border-color:var(--lime); transform:translateY(-2px); box-shadow:0 0 18px rgba(231,192,106,.3); }
       .empty { padding:44px 0; color:var(--muted); font-family:"DM Mono",monospace; }
-      .player { position:fixed; z-index:8; bottom:20px; left:50%; transform:translateX(-50%); width:min(700px,calc(100% - 32px)); padding:12px 14px; background:rgba(12,10,6,.88); backdrop-filter:blur(18px); border:1px solid rgba(231,192,106,.35); display:none; grid-template-columns:auto 1fr auto; align-items:center; gap:12px; box-shadow:0 10px 50px #0008; }
+      .player { position:fixed; z-index:8; bottom:20px; left:50%; transform:translateX(-50%); width:min(700px,calc(100% - 32px)); padding:12px 14px; background:rgba(12,10,6,.88); backdrop-filter:blur(18px); border:1px solid rgba(231,192,106,.35); display:none; grid-template-columns:auto auto 1fr auto auto auto; align-items:center; gap:10px; box-shadow:0 10px 50px #0008; }
       .player.show { display:grid; }
       .play-button { border:0; color:#061015; background:var(--cyan); width:38px; height:38px; border-radius:50%; cursor:pointer; font-size:14px; }
+      .player-nav { width:28px; height:28px; border:1px solid var(--line); color:var(--lime); background:transparent; cursor:pointer; font-size:17px; }
       .now-title { font-size:13px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
       .now-sub { font:10px "DM Mono",monospace; color:var(--muted); margin-top:3px; }
+      .progress { height:3px; margin-top:9px; overflow:hidden; background:rgba(255,255,255,.12); cursor:pointer; }
+      .progress span { display:block; width:0; height:100%; background:var(--lime); box-shadow:0 0 10px var(--lime); transition:width .1s linear; }
       .close { cursor:pointer; border:0; color:var(--muted); background:transparent; font-size:20px; }
+      .ranking { padding:0 0 100px; }
+      .ranking-list { display:grid; gap:8px; margin-top:27px; }
+      .ranking-item { display:grid; grid-template-columns:38px 1fr auto; gap:14px; align-items:center; padding:13px 0; border-bottom:1px solid var(--line); }
+      .ranking-item b { color:var(--cyan); font:12px "DM Mono",monospace; }
+      .ranking-item strong { white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+      .ranking-item span { color:var(--muted); font:10px "DM Mono",monospace; }
       footer { border-top:1px solid var(--line); padding:25px 0 42px; display:flex; justify-content:space-between; gap:20px; color:var(--muted); font:10px "DM Mono",monospace; letter-spacing:.08em; }
       @media (max-width:700px) {
         .avatar-front::before { content:none !important; display:none !important; }
@@ -167,18 +176,22 @@
         .vote-option { min-height:68px; padding:12px; }
         .section-head { display:block; }
         .search { margin-top:22px; width:100%; min-height:44px; font-size:12px; }
-        .track { grid-template-columns:28px 42px minmax(0,1fr) 34px; gap:8px; min-height:72px; padding:9px 2px; }
+        .track { grid-template-columns:28px 42px minmax(0,1fr) 48px; gap:8px; min-height:72px; padding:9px 2px; }
         .track:hover,.track.active { transform:none; }
         .number { font-size:10px; }
         .cover { width:40px; height:40px; }
         .artist,.duration { display:none; }
         .track-title { font-size:13px; line-height:1.2; }
-        .listen { display:grid; place-items:center; min-width:34px; min-height:42px; font-size:22px; opacity:1; }
+        .listen { min-width:44px; min-height:38px; padding:0 4px; font-size:8px; opacity:1; }
         .archive { padding:62px 0 50px; }
-        .player { bottom:10px; width:calc(100% - 20px); padding:10px 11px; gap:10px; border-radius:2px; }
+        .player { bottom:10px; width:calc(100% - 20px); padding:10px 11px; gap:7px; border-radius:2px; grid-template-columns:auto auto 1fr auto auto; }
         .play-button { width:42px; height:42px; }
+        .player-nav { width:25px; height:25px; font-size:15px; }
         .now-title { font-size:12px; }
         .now-sub { font-size:9px; }
+        .ranking { padding-bottom:62px; }
+        .ranking-item { grid-template-columns:28px 1fr auto; gap:9px; padding:12px 0; }
+        .ranking-item strong { font-size:13px; }
         footer { display:block; padding:22px 0 30px; font-size:8px; line-height:1.7; }
         footer span { display:block; }
       }
@@ -195,7 +208,7 @@
       }
       @media (hover:none) {
         .avatar-front::before { display:none; }
-        .listen { font-family:"DM Mono",monospace; font-size:10px; letter-spacing:.05em; }
+        .listen { font-family:"DM Mono",monospace; font-size:8px; letter-spacing:.03em; }
       }
     </style>
   </head>
@@ -212,11 +225,12 @@
       <section class="origin" aria-labelledby="origin-title"><button class="avatar-shell" id="trevor-avatar" type="button" aria-label="Otočiť Trevorov profilový obraz" aria-pressed="false"><span class="avatar-card"><span class="avatar-face avatar-front"><img src="./trevor-profile.jpg" alt="Profilový obraz Trevora" /></span><span class="avatar-face avatar-back"><span><strong>Ďakujeme<br>za podporu.</strong><span>Spolu tvoríme stránku Trevor.</span></span></span></span></button><div class="origin-copy"><p class="eyebrow">PREČO TREVOR VZNIKOL</p><h2 id="origin-title">Hudba má ľudí spájať.</h2><p>Trevor vznikol z jednoduchej myšlienky: aj tá najnečakanejšia skladba dokáže vytvoriť spoločnú chvíľu. Je to miesto pre úsmev, spomienku a hudbu, pri ktorej sa ľudia stretnú na jednej vlne.</p><div class="origin-signature">JEDEN PLAYLIST · SPOJENÍ ĽUDIA</div></div></section>
       <section class="news-section" id="news" aria-labelledby="news-title"><div class="news-card"><p class="eyebrow">NOVINKY // PRIPRAVUJEME</p><h2 id="news-title">Nasledujúce piesne.</h2><p>Trevorov archív rastie ďalej. Nové skladby a ďalšie hudobné objavy sa čoskoro pripoja k spoločnej vlne.</p><div class="news-meta"><span>ČOSKORO</span><span>VÝBER TREVORA</span><span>NOVÝ PRENOS</span></div><div class="vote-panel"><h3>Hlasuj za ďalší prírastok.</h3><p>Jeden hlas, jeden smer pre Trevorov ďalší prenos.</p><div class="vote-options"><button class="vote-option" type="button" data-vote="retro"><span>RETRO SIGNÁL</span><strong>Sarà perché ti amo · 0</strong></button><button class="vote-option" type="button" data-vote="electro"><span>ELEKTRO SIGNÁL</span><strong>Xenogenesis · 0</strong></button><button class="vote-option" type="button" data-vote="classic"><span>KLASICKÝ SIGNÁL</span><strong>Hungarian Dance No. 5 · 0</strong></button></div><p class="vote-message" id="vote-message" aria-live="polite"></p></div></div></section>
       <section class="archive" id="archive"><div class="section-head"><div><p class="eyebrow">CELÝ PRENOS</p><h2>Všetky skladby.</h2></div><input class="search" id="search" type="search" placeholder="Hľadať skladbu..." /></div><div class="track-list" id="tracks"></div></section>
+      <section class="ranking" aria-labelledby="ranking-title"><p class="eyebrow">LOKÁLNY REBRÍČEK</p><h2 id="ranking-title">Najpočúvanejšie.</h2><div class="ranking-list" id="ranking"></div></section>
       <footer><span>© 2026 TREVOR · VŠETKY PRÁVA VYHRADENÉ</span><span>VYTVORIL KUDELKO22</span></footer>
     </main>
     <div class="random-modal" id="random-modal" role="dialog" aria-modal="true" aria-labelledby="random-title"><div class="random-card"><button class="modal-close" id="modal-close" type="button" aria-label="Zavrieť náhodný výber">×</button><p class="eyebrow">NÁHODNÝ TREVOR VYBRAL</p><h2 id="random-title">Pripravujem výber...</h2><p class="random-artist" id="random-artist"></p><a class="cta" id="random-spotify" href="#" target="_blank" rel="noreferrer">POČÚVAŤ V SPOTIFY ↗</a></div></div>
     <div class="easter-toast" id="easter-toast" role="status">DISCO REŽIM AKTIVOVANÝ ✦</div>
-    <div class="player" id="player"><button class="play-button" id="toggle" aria-label="Prehrať alebo pauznúť">Ⅱ</button><div><div class="now-title" id="now-title"></div><div class="now-sub" id="now-sub">30S PREVIEW · SPOTIFY</div></div><button class="close" id="close" aria-label="Zavrieť prehrávač">×</button><audio id="audio"></audio></div>
+    <div class="player" id="player"><button class="player-nav" id="previous" aria-label="Predchádzajúca skladba">‹</button><button class="play-button" id="toggle" aria-label="Prehrať alebo pauznúť">Ⅱ</button><div><div class="now-title" id="now-title"></div><div class="now-sub" id="now-sub">30S PREVIEW · SPOTIFY</div><div class="progress" id="progress" aria-label="Pozícia skladby"><span id="progress-bar"></span></div></div><button class="player-nav" id="next" aria-label="Nasledujúca skladba">›</button><button class="close" id="close" aria-label="Zavrieť prehrávač">×</button><audio id="audio"></audio></div>
     <script>
       const tracksEl = document.querySelector('#tracks');
       const search = document.querySelector('#search');
@@ -228,6 +242,9 @@
       const randomButton = document.querySelector('#random-button');
       const randomModal = document.querySelector('#random-modal');
       const voteButtons = document.querySelectorAll('.vote-option');
+      const rankingEl = document.querySelector('#ranking');
+      const progress = document.querySelector('#progress');
+      const progressBar = document.querySelector('#progress-bar');
       let tracks = [], activeIndex = null;
       const fmt = seconds => `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, '0')}`;
       const render = query => {
@@ -236,10 +253,17 @@
       };
       const play = index => {
         const track = tracks[index]; activeIndex = index; render(search.value); player.classList.add('show');
+        const plays = JSON.parse(localStorage.getItem('trevor-plays') || '{}'); plays[index] = (plays[index] || 0) + 1; localStorage.setItem('trevor-plays', JSON.stringify(plays)); renderRanking();
         document.querySelector('#now-title').textContent = `${track.title} — ${track.artist}`;
         if (track.preview) { audio.src = track.preview; audio.play(); document.querySelector('#toggle').textContent = 'Ⅱ'; }
         else { window.open(track.url, '_blank', 'noopener'); }
       };
+      const renderRanking = () => {
+        const plays = JSON.parse(localStorage.getItem('trevor-plays') || '{}');
+        const top = tracks.map((track, index) => ({track, index, count:plays[index] || 0})).sort((a, b) => b.count - a.count || a.index - b.index).slice(0, 5);
+        rankingEl.innerHTML = top.length ? top.map(({track, count}, position) => `<div class="ranking-item"><b>${String(position + 1).padStart(2, '0')}</b><strong>${track.title} — ${track.artist}</strong><span>${count}× PREHRANÉ</span></div>`).join('') : '';
+      };
+      const playRelative = direction => { if (!tracks.length || activeIndex === null) return; play((activeIndex + direction + tracks.length) % tracks.length); };
       const showRandomTrack = () => {
         if (!tracks.length) return;
         const track = tracks[Math.floor(Math.random() * tracks.length)];
@@ -254,7 +278,7 @@
       fetch('./tracks.json?v=' + Date.now(), {cache:'no-store'}).then(response => response.json()).then(data => {
         tracks = data; document.querySelector('#count').textContent = tracks.length;
         document.querySelector('#length').textContent = fmt(Math.round(tracks.reduce((total, track) => total + track.duration, 0) / 60) * 60);
-        render('');
+        render(''); renderRanking();
       }).catch(() => tracksEl.innerHTML = '<div class="empty">ARCHÍV SA NEPODARILO NAČÍTAŤ. SPUSŤ STRÁNKU CEZ LOKÁLNY SERVER.</div>');
       tracksEl.addEventListener('click', event => { if (!event.target.closest('.listen')) { const row = event.target.closest('.track'); if (row) play(Number(row.dataset.index)); } });
       search.addEventListener('input', () => render(search.value));
@@ -264,7 +288,11 @@
       updateVotes();
       voteButtons.forEach(button => button.addEventListener('click', () => { if (selectedVote) return; const key = button.dataset.vote; votes[key] = (votes[key] || 0) + 1; selectedVote = key; localStorage.setItem('trevor-votes', JSON.stringify(votes)); localStorage.setItem('trevor-vote', key); document.querySelector('#vote-message').textContent = 'VĎAKA — HLASOVAL SI. ĎALŠÍ HLAS Z TOHTO ZARIADENIA UŽ NIE JE MOŽNÝ.'; updateVotes(); }));
       document.querySelector('#toggle').addEventListener('click', () => { if (audio.paused) { audio.play(); document.querySelector('#toggle').textContent = 'Ⅱ'; } else { audio.pause(); document.querySelector('#toggle').textContent = '▶'; } });
+      document.querySelector('#previous').addEventListener('click', () => playRelative(-1));
+      document.querySelector('#next').addEventListener('click', () => playRelative(1));
       document.querySelector('#close').addEventListener('click', () => { audio.pause(); player.classList.remove('show'); activeIndex = null; render(search.value); });
+      audio.addEventListener('timeupdate', () => { progressBar.style.width = audio.duration ? `${audio.currentTime / audio.duration * 100}%` : '0%'; });
+      progress.addEventListener('click', event => { if (!audio.duration) return; const box = progress.getBoundingClientRect(); audio.currentTime = ((event.clientX - box.left) / box.width) * audio.duration; });
       audio.addEventListener('ended', () => { document.querySelector('#toggle').textContent = '▶'; });
       let avatarClicks = 0;
       avatarButton.addEventListener('click', () => { const isFlipped = avatarButton.classList.toggle('flipped'); avatarButton.setAttribute('aria-pressed', String(isFlipped)); avatarClicks += 1; if (avatarClicks % 5 === 0) { document.body.classList.toggle('disco-mode'); const toast = document.querySelector('#easter-toast'); toast.classList.add('show'); window.setTimeout(() => toast.classList.remove('show'), 2600); } });
