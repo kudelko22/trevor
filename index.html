@@ -26,6 +26,17 @@
       .loader-track span { display:block; width:44%; height:100%; background:linear-gradient(90deg,transparent,#f8d87e,#fff9df); box-shadow:0 0 24px #f8d87e; animation:loader-scan 1.45s cubic-bezier(.72,0,.28,1) infinite; }
       .loader-number { display:block; margin-top:13px; text-align:right; color:#dfba61; font:11px "DM Mono",monospace; letter-spacing:.13em; animation:loader-count 1.45s steps(4,end) infinite; }
       .is-ready .preloader { opacity:0; visibility:hidden; pointer-events:none; }
+      .cinematic-sweep { position:fixed; inset:0; z-index:90; pointer-events:none; opacity:0; background:linear-gradient(105deg,transparent 34%,rgba(255,240,177,.04) 43%,rgba(255,231,128,.66) 49%,#fff8d8 50%,rgba(255,231,128,.66) 51%,rgba(255,240,177,.04) 57%,transparent 66%); transform:translateX(-115%); }
+      .cinematic-sweep.active { animation:cinematic-sweep 1.65s cubic-bezier(.65,0,.2,1) both; }
+      .cinematic-ready main { animation:cinematic-main 1.35s cubic-bezier(.2,.8,.2,1) both; }
+      .cinematic-ready .topbar { animation:cinematic-rise .75s .08s both; }
+      .cinematic-ready .hero > div:first-child { animation:cinematic-rise .9s .18s both; }
+      .cinematic-ready .hero-bottom { animation:cinematic-rise .9s .3s both; }
+      .cinematic-ready .stats { animation:cinematic-rise .85s .42s both; }
+      .cinematic-ready .origin { animation:cinematic-rise .95s .5s both; }
+      @keyframes cinematic-sweep { 0% { opacity:0; transform:translateX(-115%); } 18% { opacity:1; } 76% { opacity:.82; } 100% { opacity:0; transform:translateX(115%); } }
+      @keyframes cinematic-main { from { opacity:.2; transform:scale(1.018); filter:brightness(.65); } to { opacity:1; transform:none; filter:none; } }
+      @keyframes cinematic-rise { from { opacity:0; transform:translateY(18px); filter:blur(5px); } to { opacity:1; transform:none; filter:none; } }
       @keyframes loader-breathe { 50% { transform:scale(1.14); opacity:.62; } }
       @keyframes loader-scan { from { transform:translateX(-110%); } to { transform:translateX(260%); } }
       @keyframes loader-count { 0% { opacity:.38; } 100% { opacity:1; } }
@@ -214,6 +225,7 @@
   </head>
   <body>
     <div class="preloader" role="status" aria-label="Načítava sa Trevor"><div class="loader-content"><p class="loader-kicker">SIGNÁL SA PRIPÁJA</p><h2 class="loader-logo">TREVOR</h2><p class="loader-subtitle">PRIPRAVUJEME SPOLOČNÚ VLNU</p><div class="loader-track"><span></span></div><span class="loader-number">NAČÍTAVANIE_</span></div></div>
+    <div class="cinematic-sweep" aria-hidden="true"></div>
     <div class="backdrop"><div class="orb"></div><div class="orb two"></div></div>
     <main class="frame">
       <header class="topbar"><div class="brand"><i class="brand-mark"></i>TREVOR // HUDEBNÝ ARCHÍV</div><div class="top-actions"><div class="status">● NAŽIVO ZO SPOTIFY</div><button class="news-button" id="news-button" type="button">NOVINKY ↘</button></div><div>OD ROKU 2026</div></header>
@@ -297,7 +309,7 @@
       let avatarClicks = 0;
       avatarButton.addEventListener('click', () => { const isFlipped = avatarButton.classList.toggle('flipped'); avatarButton.setAttribute('aria-pressed', String(isFlipped)); avatarClicks += 1; if (avatarClicks % 5 === 0) { document.body.classList.toggle('disco-mode'); const toast = document.querySelector('#easter-toast'); toast.classList.add('show'); window.setTimeout(() => toast.classList.remove('show'), 2600); } });
       newsButton.addEventListener('click', () => { document.body.classList.add('news-transition'); newsSection.classList.remove('spotlight'); void newsSection.offsetWidth; newsSection.classList.add('spotlight'); window.setTimeout(() => newsSection.scrollIntoView({behavior:'smooth',block:'center'}), 210); window.setTimeout(() => document.body.classList.remove('news-transition'), 840); });
-      const finishLoading = () => window.setTimeout(() => document.body.classList.add('is-ready'), 1450);
+      const finishLoading = () => window.setTimeout(() => { document.body.classList.add('is-ready','cinematic-ready'); document.querySelector('.cinematic-sweep').classList.add('active'); }, 1450);
       if (document.readyState === 'complete') finishLoading(); else window.addEventListener('load', finishLoading, {once:true});
     </script>
   </body>
