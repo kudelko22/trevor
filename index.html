@@ -94,6 +94,7 @@
       .vote-options { display:grid; grid-template-columns:repeat(3,1fr); gap:9px; }
       .vote-option { min-height:75px; padding:13px; text-align:left; color:#fff8e7; border:1px solid rgba(231,192,106,.23); background:rgba(0,0,0,.16); font-family:"Space Grotesk",sans-serif; cursor:pointer; transition:.2s; }
       .vote-option:hover:not(:disabled),.vote-option:focus-visible:not(:disabled) { border-color:var(--cyan); background:rgba(231,192,106,.13); transform:translateY(-3px); }
+      .vote-option.selected { border-color:var(--lime); background:rgba(231,192,106,.16); box-shadow:inset 3px 0 0 var(--lime); }
       .vote-option:disabled { cursor:default; opacity:.65; }
       .vote-option span { display:block; color:#bdb19a; font:9px "DM Mono",monospace; letter-spacing:.08em; }
       .vote-option strong { display:block; margin-top:7px; font-size:15px; }
@@ -138,6 +139,7 @@
       .close { cursor:pointer; border:0; color:var(--muted); background:transparent; font-size:20px; }
       footer { border-top:1px solid var(--line); padding:25px 0 42px; display:flex; justify-content:space-between; gap:20px; color:var(--muted); font:10px "DM Mono",monospace; letter-spacing:.08em; }
       @media (max-width:700px) {
+        .avatar-front::before { content:none !important; display:none !important; }
         body { padding-bottom:82px; }
         .frame { width:min(100% - 28px,1240px); }
         .topbar { height:64px; gap:12px; }
@@ -247,8 +249,8 @@
         randomModal.classList.add('open');
       };
       const votes = JSON.parse(localStorage.getItem('trevor-votes') || '{"retro":0,"electro":0,"classic":0}');
-      const selectedVote = localStorage.getItem('trevor-vote');
-      const updateVotes = () => voteButtons.forEach(button => { const key = button.dataset.vote; const labels = {retro:'Sarà perché ti amo',electro:'Xenogenesis',classic:'Hungarian Dance No. 5'}; button.querySelector('strong').textContent = `${labels[key]} · ${votes[key] || 0}`; button.disabled = Boolean(selectedVote); });
+      let selectedVote = localStorage.getItem('trevor-vote');
+      const updateVotes = () => voteButtons.forEach(button => { const key = button.dataset.vote; const labels = {retro:'Sarà perché ti amo',electro:'Xenogenesis',classic:'Hungarian Dance No. 5'}; button.querySelector('strong').textContent = `${labels[key]} · ${votes[key] || 0}`; button.disabled = Boolean(selectedVote); button.classList.toggle('selected', selectedVote === key); });
       fetch('./tracks.json?v=' + Date.now(), {cache:'no-store'}).then(response => response.json()).then(data => {
         tracks = data; document.querySelector('#count').textContent = tracks.length;
         document.querySelector('#length').textContent = fmt(Math.round(tracks.reduce((total, track) => total + track.duration, 0) / 60) * 60);
@@ -260,7 +262,7 @@
       document.querySelector('#modal-close').addEventListener('click', () => randomModal.classList.remove('open'));
       randomModal.addEventListener('click', event => { if (event.target === randomModal) randomModal.classList.remove('open'); });
       updateVotes();
-      voteButtons.forEach(button => button.addEventListener('click', () => { if (selectedVote) return; const key = button.dataset.vote; votes[key] = (votes[key] || 0) + 1; localStorage.setItem('trevor-votes', JSON.stringify(votes)); localStorage.setItem('trevor-vote', key); document.querySelector('#vote-message').textContent = 'VĎAKA — TVOJ HLAS JE SÚČASŤOU ĎALŠIEHO PRENOSU.'; updateVotes(); }));
+      voteButtons.forEach(button => button.addEventListener('click', () => { if (selectedVote) return; const key = button.dataset.vote; votes[key] = (votes[key] || 0) + 1; selectedVote = key; localStorage.setItem('trevor-votes', JSON.stringify(votes)); localStorage.setItem('trevor-vote', key); document.querySelector('#vote-message').textContent = 'VĎAKA — HLASOVAL SI. ĎALŠÍ HLAS Z TOHTO ZARIADENIA UŽ NIE JE MOŽNÝ.'; updateVotes(); }));
       document.querySelector('#toggle').addEventListener('click', () => { if (audio.paused) { audio.play(); document.querySelector('#toggle').textContent = 'Ⅱ'; } else { audio.pause(); document.querySelector('#toggle').textContent = '▶'; } });
       document.querySelector('#close').addEventListener('click', () => { audio.pause(); player.classList.remove('show'); activeIndex = null; render(search.value); });
       audio.addEventListener('ended', () => { document.querySelector('#toggle').textContent = '▶'; });
