@@ -1,0 +1,217 @@
+<!doctype html>
+<html lang="sk">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#060813" />
+    <title>TREVOR // HUDEBNÝ ARCHÍV</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <style>
+      :root { --ink:#fffaf0; --muted:#a79b86; --line:rgba(213,173,85,.2); --cyan:#e7c06a; --purple:#8e6d2d; --lime:#f7d982; --bg:#090806; }
+      * { box-sizing:border-box; }
+      html { scroll-behavior:smooth; }
+      body { margin:0; color:var(--ink); background:var(--bg); font-family:"Space Grotesk",sans-serif; overflow-x:hidden; }
+      body::before { content:""; position:fixed; inset:0; pointer-events:none; z-index:4; opacity:.18; background:repeating-linear-gradient(0deg,transparent 0 3px,rgba(255,255,255,.07) 3px 4px); mix-blend-mode:overlay; }
+      body.news-transition::after { content:""; position:fixed; inset:0; z-index:70; pointer-events:none; background:linear-gradient(90deg,transparent 0 35%,rgba(248,216,126,.78) 48%,#fff4cf 50%,rgba(248,216,126,.78) 52%,transparent 65%); animation:news-wipe .82s cubic-bezier(.6,0,.2,1) both; }
+      .backdrop { position:fixed; inset:0; z-index:-2; overflow:hidden; background:radial-gradient(circle at 73% 5%,#3e2d0f 0,transparent 27%),radial-gradient(circle at 0% 51%,#3b260d 0,transparent 23%),#090806; }
+      .preloader { position:fixed; inset:0; z-index:99; display:grid; place-items:center; overflow:hidden; background:#090806; transition:opacity .75s ease,visibility .75s ease; }
+      .preloader::before { content:""; position:absolute; width:70vmax; aspect-ratio:1; border-radius:50%; background:radial-gradient(circle,rgba(218,171,62,.23),transparent 59%); animation:loader-breathe 2.4s ease-in-out infinite; }
+      .loader-content { position:relative; width:min(570px,calc(100% - 48px)); text-align:center; }
+      .loader-kicker { margin:0 0 19px; color:#dfba61; font:12px "DM Mono",monospace; letter-spacing:.27em; }
+      .loader-logo { margin:0; color:#fff8e7; font-size:clamp(66px,15vw,132px); line-height:.8; letter-spacing:-.09em; text-shadow:0 0 42px rgba(245,202,101,.25); }
+      .loader-subtitle { color:#b8ab91; margin:25px 0 37px; font:12px "DM Mono",monospace; letter-spacing:.14em; }
+      .loader-track { height:1px; overflow:hidden; background:rgba(255,239,193,.22); }
+      .loader-track span { display:block; width:44%; height:100%; background:linear-gradient(90deg,transparent,#f8d87e,#fff9df); box-shadow:0 0 24px #f8d87e; animation:loader-scan 1.45s cubic-bezier(.72,0,.28,1) infinite; }
+      .loader-number { display:block; margin-top:13px; text-align:right; color:#dfba61; font:11px "DM Mono",monospace; letter-spacing:.13em; animation:loader-count 1.45s steps(4,end) infinite; }
+      .is-ready .preloader { opacity:0; visibility:hidden; pointer-events:none; }
+      @keyframes loader-breathe { 50% { transform:scale(1.14); opacity:.62; } }
+      @keyframes loader-scan { from { transform:translateX(-110%); } to { transform:translateX(260%); } }
+      @keyframes loader-count { 0% { opacity:.38; } 100% { opacity:1; } }
+      .orb { position:absolute; width:48vw; aspect-ratio:1; border-radius:50%; filter:blur(55px); opacity:.36; animation:drift 13s ease-in-out infinite alternate; background:#9a6f1c; left:45%; top:18%; }
+      .orb.two { width:38vw; background:#c68a1d; left:-17%; top:42%; animation-delay:-7s; }
+      @keyframes drift { to { transform:translate(8vw,-5vh) scale(1.15); } }
+      .frame { width:min(1240px,calc(100% - 40px)); margin:auto; }
+      .topbar { height:78px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid var(--line); font-family:"DM Mono",monospace; font-size:11px; letter-spacing:.12em; }
+      .brand { display:flex; align-items:center; gap:10px; font-weight:500; }
+      .brand-mark { width:13px; height:13px; background:var(--lime); border-radius:50%; box-shadow:0 0 21px var(--lime); animation:blink 2.3s infinite; }
+      @keyframes blink { 50% { opacity:.35; } }
+      .status { color:var(--cyan); }
+      .top-actions { display:flex; align-items:center; gap:26px; }
+      .news-button { padding:8px 11px; border:1px solid rgba(231,192,106,.58); color:#f7d982; background:rgba(213,173,85,.08); font:500 10px "DM Mono",monospace; letter-spacing:.12em; cursor:pointer; transition:.25s; }
+      .news-button:hover,.news-button:focus-visible { color:#171005; background:#f7d982; box-shadow:0 0 22px rgba(231,192,106,.4); transform:translateY(-2px); }
+      .hero { min-height:510px; padding:76px 0 54px; position:relative; display:grid; align-items:end; }
+      .eyebrow { font:500 11px "DM Mono",monospace; letter-spacing:.16em; color:var(--cyan); margin:0 0 18px; }
+      h1 { font-size:clamp(78px,15vw,194px); letter-spacing:-.085em; line-height:.72; margin:0; max-width:1000px; text-transform:uppercase; }
+      h1 span { color:transparent; -webkit-text-stroke:1px rgba(220,225,255,.8); text-shadow:0 0 34px rgba(125,249,255,.25); }
+      .hero-bottom { display:flex; justify-content:space-between; gap:24px; align-items:end; margin-top:54px; }
+      .intro { font-size:clamp(18px,2vw,25px); line-height:1.18; max-width:470px; margin:0; }
+      .cta { display:inline-flex; align-items:center; justify-content:center; gap:12px; padding:14px 19px; border:1px solid var(--cyan); color:var(--ink); text-decoration:none; font:500 12px "DM Mono",monospace; letter-spacing:.08em; transition:.2s; }
+      .cta:hover { background:var(--cyan); color:#171005; box-shadow:0 0 30px rgba(231,192,106,.45); }
+      .hero-actions { display:flex; flex-wrap:wrap; justify-content:flex-end; gap:10px; }
+      .random-button { display:inline-flex; align-items:center; justify-content:center; padding:14px 18px; border:1px solid rgba(231,192,106,.4); color:#efd68e; background:rgba(213,173,85,.09); font:500 12px "DM Mono",monospace; letter-spacing:.07em; cursor:pointer; transition:.2s; }
+      .random-button:hover,.random-button:focus-visible { border-color:#fff0bd; color:#171005; background:#fff0bd; box-shadow:0 0 28px rgba(255,240,189,.34); transform:translateY(-2px); }
+      .stats { display:grid; grid-template-columns:repeat(3,1fr); border-block:1px solid var(--line); }
+      .stat { padding:24px 18px; border-right:1px solid var(--line); }
+      .stat:last-child { border:0; }
+      .stat b { display:block; font-size:31px; letter-spacing:-.06em; }
+      .stat span { color:var(--muted); font:11px "DM Mono",monospace; text-transform:uppercase; letter-spacing:.08em; }
+      .origin { display:grid; grid-template-columns:minmax(230px,.78fr) minmax(0,1.22fr); gap:clamp(36px,8vw,115px); align-items:center; padding:94px 7% 87px; border-bottom:1px solid var(--line); }
+      .avatar-shell { width:min(100%,286px); aspect-ratio:1; position:relative; display:grid; place-items:center; margin:auto; padding:0; border:0; background:transparent; cursor:pointer; animation:portrait-float 5.5s ease-in-out infinite; }
+      .avatar-shell::before,.avatar-shell::after { content:""; position:absolute; border-radius:50%; border:1px solid rgba(231,192,106,.42); inset:-17px; animation:orbit 8s linear infinite; }
+      .avatar-shell::after { inset:-38px; border-style:dashed; border-color:rgba(231,192,106,.27); animation-direction:reverse; animation-duration:14s; }
+      .avatar-card { width:100%; height:100%; position:relative; transform-style:preserve-3d; transition:transform .8s cubic-bezier(.2,.75,.2,1),scale .35s ease; z-index:1; }
+      .avatar-shell:hover .avatar-card,.avatar-shell:focus-visible .avatar-card { scale:1.065; }
+      .avatar-shell.flipped .avatar-card { transform:rotateY(180deg); }
+      .avatar-face { width:100%; height:100%; padding:7px; position:absolute; inset:0; overflow:hidden; border:1px solid var(--cyan); border-radius:50%; background:linear-gradient(135deg,#fff0bd,#795012 45%,#f4ce74); box-shadow:0 0 0 7px rgba(213,173,85,.08),0 0 42px rgba(213,173,85,.32); backface-visibility:hidden; }
+      .avatar-front::after { content:""; position:absolute; inset:-90% -55%; background:linear-gradient(112deg,transparent 45%,rgba(255,245,200,.72) 50%,transparent 56%); animation:glint 5s ease-in-out infinite; }
+      .avatar-front::before { content:"KLIKNI"; display:grid; place-items:center; position:absolute; inset:7px; z-index:2; border-radius:50%; background:rgba(8,7,4,.7); color:#fff5d5; font:500 13px "DM Mono",monospace; letter-spacing:.15em; opacity:0; transition:opacity .25s ease; }
+      .avatar-shell:hover .avatar-front::before,.avatar-shell:focus-visible .avatar-front::before { opacity:1; }
+      .avatar-face img { display:block; width:100%; height:100%; border-radius:50%; object-fit:cover; filter:contrast(1.08) saturate(.78) sepia(.12); }
+      .avatar-back { display:grid; place-items:center; padding:32px; transform:rotateY(180deg); background:radial-gradient(circle at 33% 25%,#795014 0,transparent 34%),#161006; color:#fff5d5; }
+      .avatar-back strong { display:block; font-size:23px; line-height:1; letter-spacing:-.06em; }
+      .avatar-back span { display:block; margin-top:14px; color:#ebca78; font:10px/1.55 "DM Mono",monospace; letter-spacing:.05em; text-transform:uppercase; }
+      .origin-copy { max-width:620px; }
+      .origin-copy h2 { max-width:550px; }
+      .origin-copy p { color:#d8d0bf; font-size:clamp(18px,2vw,23px); line-height:1.4; margin:24px 0 30px; }
+      .origin-signature { display:flex; align-items:center; gap:12px; color:var(--cyan); font:11px "DM Mono",monospace; letter-spacing:.08em; text-transform:uppercase; }
+      .origin-signature::before { content:""; width:42px; height:1px; background:var(--cyan); box-shadow:0 0 9px var(--cyan); }
+      @keyframes portrait-float { 50% { transform:translateY(-10px); } }
+      @keyframes orbit { to { transform:rotate(360deg); } }
+      @keyframes glint { 0%,65%,100% { transform:translateX(-80%) rotate(8deg); } 83% { transform:translateX(80%) rotate(8deg); } }
+      .news-section { padding:86px 0 20px; }
+      .news-card { position:relative; overflow:hidden; padding:clamp(31px,5vw,64px); border:1px solid rgba(231,192,106,.32); background:linear-gradient(115deg,rgba(231,192,106,.13),rgba(30,22,8,.62) 52%,rgba(5,5,4,.66)); }
+      .news-card::after { content:""; position:absolute; top:0; right:8%; width:1px; height:100%; background:linear-gradient(transparent,var(--cyan),transparent); opacity:.7; }
+      .news-card h2 { max-width:700px; }
+      .news-card p { max-width:600px; margin:24px 0 0; color:#d8d0bf; font-size:clamp(17px,2vw,22px); line-height:1.42; }
+      .news-meta { display:flex; flex-wrap:wrap; gap:12px; margin-top:33px; }
+      .news-meta span { padding:9px 12px; border:1px solid var(--line); color:#e9c977; font:10px "DM Mono",monospace; letter-spacing:.08em; }
+      .vote-panel { margin-top:38px; padding-top:27px; border-top:1px solid var(--line); }
+      .vote-panel h3 { margin:0 0 15px; font-size:18px; letter-spacing:-.04em; }
+      .vote-panel > p { margin:0 0 17px; font-size:14px; color:#bdb19a; }
+      .vote-options { display:grid; grid-template-columns:repeat(3,1fr); gap:9px; }
+      .vote-option { min-height:75px; padding:13px; text-align:left; color:#fff8e7; border:1px solid rgba(231,192,106,.23); background:rgba(0,0,0,.16); font-family:"Space Grotesk",sans-serif; cursor:pointer; transition:.2s; }
+      .vote-option:hover:not(:disabled),.vote-option:focus-visible:not(:disabled) { border-color:var(--cyan); background:rgba(231,192,106,.13); transform:translateY(-3px); }
+      .vote-option:disabled { cursor:default; opacity:.65; }
+      .vote-option span { display:block; color:#bdb19a; font:9px "DM Mono",monospace; letter-spacing:.08em; }
+      .vote-option strong { display:block; margin-top:7px; font-size:15px; }
+      .vote-message { min-height:18px; margin:14px 0 0 !important; color:#ecd17f !important; font:11px "DM Mono",monospace !important; letter-spacing:.05em; }
+      .news-section.spotlight .news-card { animation:news-arrive .8s cubic-bezier(.15,.8,.25,1) both; }
+      @keyframes news-wipe { 0% { opacity:0; transform:translateX(-110%); } 38% { opacity:1; } 100% { opacity:0; transform:translateX(110%); } }
+      @keyframes news-arrive { from { opacity:.15; transform:translateY(28px) scale(.97); filter:brightness(.7); } to { opacity:1; transform:none; filter:none; } }
+      .random-modal { position:fixed; inset:0; z-index:80; display:grid; place-items:center; padding:24px; background:rgba(4,3,2,.78); backdrop-filter:blur(14px); opacity:0; visibility:hidden; transition:.28s; }
+      .random-modal.open { opacity:1; visibility:visible; }
+      .random-card { width:min(520px,100%); position:relative; padding:clamp(32px,6vw,57px); border:1px solid var(--cyan); background:radial-gradient(circle at 100% 0,rgba(213,173,85,.33),transparent 39%),#100c05; box-shadow:0 25px 80px #000b; transform:translateY(18px) scale(.96); transition:.35s cubic-bezier(.2,.8,.2,1); }
+      .random-modal.open .random-card { transform:none; }
+      .random-card h2 { margin-top:8px; font-size:clamp(35px,7vw,68px); }
+      .random-artist { margin:17px 0 30px; color:#d8d0bf; font-size:18px; }
+      .modal-close { position:absolute; top:13px; right:15px; border:0; background:transparent; color:#d8c69b; font-size:25px; cursor:pointer; }
+      .easter-toast { position:fixed; z-index:81; bottom:27px; left:50%; padding:12px 18px; color:#130d04; background:#f2ce70; font:11px "DM Mono",monospace; letter-spacing:.08em; box-shadow:0 0 30px rgba(242,206,112,.38); transform:translate(-50%,110px); transition:transform .4s cubic-bezier(.2,.8,.2,1); }
+      .easter-toast.show { transform:translate(-50%,0); }
+      body.disco-mode .backdrop { background:radial-gradient(circle at 77% 8%,#5e173d 0,transparent 28%),radial-gradient(circle at 5% 55%,#174d4f 0,transparent 26%),#10070c; }
+      body.disco-mode .orb { background:#db2c75; }
+      body.disco-mode .orb.two { background:#4ad7bd; }
+      body.disco-mode .brand-mark { background:#ff75b4; box-shadow:0 0 21px #ff75b4; }
+      .archive { padding:70px 0 120px; }
+      .section-head { display:flex; justify-content:space-between; gap:25px; align-items:end; margin-bottom:27px; }
+      h2 { margin:0; font-size:clamp(34px,5vw,62px); letter-spacing:-.065em; line-height:.88; }
+      .search { border:none; border-bottom:1px solid var(--line); background:transparent; color:var(--ink); outline:none; padding:11px 0; width:260px; font:13px "DM Mono",monospace; }
+      .search::placeholder { color:var(--muted); }
+      .track-list { border-top:1px solid var(--line); }
+      .track { display:grid; grid-template-columns:55px 54px minmax(0,1.2fr) minmax(0,1fr) 82px 35px; gap:16px; align-items:center; min-height:78px; border-bottom:1px solid var(--line); padding:10px 7px; transition:background .18s,transform .18s; }
+      .track:hover,.track.active { background:rgba(231,192,106,.08); transform:translateX(7px); }
+      .number { color:var(--muted); font:12px "DM Mono",monospace; }
+      .cover { width:47px; height:47px; object-fit:cover; background:#1b2140; }
+      .track-title { font-size:16px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+      .artist,.duration { color:var(--muted); font-size:14px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+      .duration { font-family:"DM Mono",monospace; font-size:12px; text-align:right; }
+      .listen { color:var(--cyan); font-size:20px; text-decoration:none; text-align:center; opacity:.7; transition:.2s; }
+      .listen:hover { opacity:1; transform:scale(1.2); }
+      .empty { padding:44px 0; color:var(--muted); font-family:"DM Mono",monospace; }
+      .player { position:fixed; z-index:8; bottom:20px; left:50%; transform:translateX(-50%); width:min(700px,calc(100% - 32px)); padding:12px 14px; background:rgba(12,10,6,.88); backdrop-filter:blur(18px); border:1px solid rgba(231,192,106,.35); display:none; grid-template-columns:auto 1fr auto; align-items:center; gap:12px; box-shadow:0 10px 50px #0008; }
+      .player.show { display:grid; }
+      .play-button { border:0; color:#061015; background:var(--cyan); width:38px; height:38px; border-radius:50%; cursor:pointer; font-size:14px; }
+      .now-title { font-size:13px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+      .now-sub { font:10px "DM Mono",monospace; color:var(--muted); margin-top:3px; }
+      .close { cursor:pointer; border:0; color:var(--muted); background:transparent; font-size:20px; }
+      footer { border-top:1px solid var(--line); padding:25px 0 42px; display:flex; justify-content:space-between; gap:20px; color:var(--muted); font:10px "DM Mono",monospace; letter-spacing:.08em; }
+      @media (max-width:700px) { .frame { width:min(100% - 28px,1240px); } .topbar .status,.topbar > :last-child { display:none; } .top-actions { margin-left:auto; } .hero { min-height:480px; padding-top:54px; } .hero-bottom { display:block; } .hero-actions { justify-content:flex-start; margin-top:27px; } .cta { margin-top:0; } .stat { padding:18px 10px; } .stat b { font-size:25px; } .origin { grid-template-columns:1fr; padding:78px 6% 68px; text-align:center; } .origin-copy h2 { margin:auto; } .origin-signature { justify-content:center; } .vote-options { grid-template-columns:1fr; } .section-head { display:block; } .search { margin-top:22px; width:100%; } .track { grid-template-columns:31px 44px minmax(0,1fr) 24px; gap:10px; min-height:66px; } .cover { width:40px; height:40px; } .artist,.duration { display:none; } .track-title { font-size:14px; } footer { font-size:9px; } }
+    </style>
+  </head>
+  <body>
+    <div class="preloader" role="status" aria-label="Načítava sa Trevor"><div class="loader-content"><p class="loader-kicker">SIGNÁL SA PRIPÁJA</p><h2 class="loader-logo">TREVOR</h2><p class="loader-subtitle">PRIPRAVUJEME SPOLOČNÚ VLNU</p><div class="loader-track"><span></span></div><span class="loader-number">NAČÍTAVANIE_</span></div></div>
+    <div class="backdrop"><div class="orb"></div><div class="orb two"></div></div>
+    <main class="frame">
+      <header class="topbar"><div class="brand"><i class="brand-mark"></i>TREVOR // HUDEBNÝ ARCHÍV</div><div class="top-actions"><div class="status">● NAŽIVO ZO SPOTIFY</div><button class="news-button" id="news-button" type="button">NOVINKY ↘</button></div><div>OD ROKU 2026</div></header>
+      <section class="hero">
+        <div><p class="eyebrow">PLAYLIST_2JvPlBnk1A6N3Dig5bPpyB</p><h1>Tre<span>vor</span></h1></div>
+        <div class="hero-bottom"><p class="intro">Playlist pre lepší deň. Od Lúčnice cez sovietsku hymnu až po skupinu ABBA — nič tu nie je náhoda.</p><div class="hero-actions"><button class="random-button" id="random-button" type="button">NÁHODNÝ TREVOR ✦</button><a class="cta" href="https://open.spotify.com/playlist/2JvPlBnk1A6N3Dig5bPpyB?si=2d2e8090afe04d38" target="_blank" rel="noreferrer">OTVORIŤ V SPOTIFY ↗</a></div></div>
+      </section>
+      <section class="stats"><div class="stat"><b id="count">55</b><span>skladieb v archíve</span></div><div class="stat"><b id="length">--:--</b><span>spoločných minút</span></div><div class="stat"><b>1</b><span>spoločný cieľ</span></div></section>
+      <section class="origin" aria-labelledby="origin-title"><button class="avatar-shell" id="trevor-avatar" type="button" aria-label="Otočiť Trevorov profilový obraz" aria-pressed="false"><span class="avatar-card"><span class="avatar-face avatar-front"><img src="./trevor-profile.jpg" alt="Profilový obraz Trevora" /></span><span class="avatar-face avatar-back"><span><strong>Ďakujeme<br>za podporu.</strong><span>Spolu tvoríme stránku Trevor.</span></span></span></span></button><div class="origin-copy"><p class="eyebrow">PREČO TREVOR VZNIKOL</p><h2 id="origin-title">Hudba má ľudí spájať.</h2><p>Trevor vznikol z jednoduchej myšlienky: aj tá najnečakanejšia skladba dokáže vytvoriť spoločnú chvíľu. Je to miesto pre úsmev, spomienku a hudbu, pri ktorej sa ľudia stretnú na jednej vlne.</p><div class="origin-signature">JEDEN PLAYLIST · SPOJENÍ ĽUDIA</div></div></section>
+      <section class="news-section" id="news" aria-labelledby="news-title"><div class="news-card"><p class="eyebrow">NOVINKY // PRIPRAVUJEME</p><h2 id="news-title">Nasledujúce piesne.</h2><p>Trevorov archív rastie ďalej. Nové skladby a ďalšie hudobné objavy sa čoskoro pripoja k spoločnej vlne.</p><div class="news-meta"><span>ČOSKORO</span><span>VÝBER TREVORA</span><span>NOVÝ PRENOS</span></div><div class="vote-panel"><h3>Hlasuj za ďalší prírastok.</h3><p>Jeden hlas, jeden smer pre Trevorov ďalší prenos.</p><div class="vote-options"><button class="vote-option" type="button" data-vote="retro"><span>RETRO SIGNÁL</span><strong>Sarà perché ti amo · 0</strong></button><button class="vote-option" type="button" data-vote="electro"><span>ELEKTRO SIGNÁL</span><strong>Xenogenesis · 0</strong></button><button class="vote-option" type="button" data-vote="classic"><span>KLASICKÝ SIGNÁL</span><strong>Hungarian Dance No. 5 · 0</strong></button></div><p class="vote-message" id="vote-message" aria-live="polite"></p></div></div></section>
+      <section class="archive" id="archive"><div class="section-head"><div><p class="eyebrow">CELÝ PRENOS</p><h2>Všetky skladby.</h2></div><input class="search" id="search" type="search" placeholder="Hľadať skladbu..." /></div><div class="track-list" id="tracks"></div></section>
+      <footer><span>© 2026 TREVOR · VŠETKY PRÁVA VYHRADENÉ</span><span>VYTVORIL KUDELKO22</span></footer>
+    </main>
+    <div class="random-modal" id="random-modal" role="dialog" aria-modal="true" aria-labelledby="random-title"><div class="random-card"><button class="modal-close" id="modal-close" type="button" aria-label="Zavrieť náhodný výber">×</button><p class="eyebrow">NÁHODNÝ TREVOR VYBRAL</p><h2 id="random-title">Pripravujem výber...</h2><p class="random-artist" id="random-artist"></p><a class="cta" id="random-spotify" href="#" target="_blank" rel="noreferrer">POČÚVAŤ V SPOTIFY ↗</a></div></div>
+    <div class="easter-toast" id="easter-toast" role="status">DISCO REŽIM AKTIVOVANÝ ✦</div>
+    <div class="player" id="player"><button class="play-button" id="toggle" aria-label="Prehrať alebo pauznúť">Ⅱ</button><div><div class="now-title" id="now-title"></div><div class="now-sub" id="now-sub">30S PREVIEW · SPOTIFY</div></div><button class="close" id="close" aria-label="Zavrieť prehrávač">×</button><audio id="audio"></audio></div>
+    <script>
+      const tracksEl = document.querySelector('#tracks');
+      const search = document.querySelector('#search');
+      const audio = document.querySelector('#audio');
+      const player = document.querySelector('#player');
+      const avatarButton = document.querySelector('#trevor-avatar');
+      const newsButton = document.querySelector('#news-button');
+      const newsSection = document.querySelector('#news');
+      const randomButton = document.querySelector('#random-button');
+      const randomModal = document.querySelector('#random-modal');
+      const voteButtons = document.querySelectorAll('.vote-option');
+      let tracks = [], activeIndex = null;
+      const fmt = seconds => `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, '0')}`;
+      const render = query => {
+        const filtered = tracks.map((track, index) => ({track, index})).filter(({track}) => `${track.title} ${track.artist}`.toLowerCase().includes(query.toLowerCase()));
+        tracksEl.innerHTML = filtered.length ? filtered.map(({track, index}) => `<article class="track ${activeIndex === index ? 'active' : ''}" data-index="${index}"><span class="number">${String(index + 1).padStart(2, '0')}</span><img class="cover" src="${track.image}" alt="" loading="lazy" /><div class="track-title">${track.title}</div><div class="artist">${track.artist}</div><div class="duration">${fmt(track.duration)}</div><a class="listen" href="${track.url}" target="_blank" rel="noreferrer" aria-label="Otvoriť v Spotify">↗</a></article>`).join('') : '<div class="empty">ŽIADNY SIGNÁL SA NENAŠIEL.</div>';
+      };
+      const play = index => {
+        const track = tracks[index]; activeIndex = index; render(search.value); player.classList.add('show');
+        document.querySelector('#now-title').textContent = `${track.title} — ${track.artist}`;
+        if (track.preview) { audio.src = track.preview; audio.play(); document.querySelector('#toggle').textContent = 'Ⅱ'; }
+        else { window.open(track.url, '_blank', 'noopener'); }
+      };
+      const showRandomTrack = () => {
+        if (!tracks.length) return;
+        const track = tracks[Math.floor(Math.random() * tracks.length)];
+        document.querySelector('#random-title').textContent = track.title;
+        document.querySelector('#random-artist').textContent = track.artist;
+        document.querySelector('#random-spotify').href = track.url;
+        randomModal.classList.add('open');
+      };
+      const votes = JSON.parse(localStorage.getItem('trevor-votes') || '{"retro":0,"electro":0,"classic":0}');
+      const selectedVote = localStorage.getItem('trevor-vote');
+      const updateVotes = () => voteButtons.forEach(button => { const key = button.dataset.vote; const labels = {retro:'Sarà perché ti amo',electro:'Xenogenesis',classic:'Hungarian Dance No. 5'}; button.querySelector('strong').textContent = `${labels[key]} · ${votes[key] || 0}`; button.disabled = Boolean(selectedVote); });
+      fetch('./tracks.json?v=' + Date.now(), {cache:'no-store'}).then(response => response.json()).then(data => {
+        tracks = data; document.querySelector('#count').textContent = tracks.length;
+        document.querySelector('#length').textContent = fmt(Math.round(tracks.reduce((total, track) => total + track.duration, 0) / 60) * 60);
+        render('');
+      }).catch(() => tracksEl.innerHTML = '<div class="empty">ARCHÍV SA NEPODARILO NAČÍTAŤ. SPUSŤ STRÁNKU CEZ LOKÁLNY SERVER.</div>');
+      tracksEl.addEventListener('click', event => { if (!event.target.closest('.listen')) { const row = event.target.closest('.track'); if (row) play(Number(row.dataset.index)); } });
+      search.addEventListener('input', () => render(search.value));
+      randomButton.addEventListener('click', showRandomTrack);
+      document.querySelector('#modal-close').addEventListener('click', () => randomModal.classList.remove('open'));
+      randomModal.addEventListener('click', event => { if (event.target === randomModal) randomModal.classList.remove('open'); });
+      updateVotes();
+      voteButtons.forEach(button => button.addEventListener('click', () => { if (selectedVote) return; const key = button.dataset.vote; votes[key] = (votes[key] || 0) + 1; localStorage.setItem('trevor-votes', JSON.stringify(votes)); localStorage.setItem('trevor-vote', key); document.querySelector('#vote-message').textContent = 'VĎAKA — TVOJ HLAS JE SÚČASŤOU ĎALŠIEHO PRENOSU.'; updateVotes(); }));
+      document.querySelector('#toggle').addEventListener('click', () => { if (audio.paused) { audio.play(); document.querySelector('#toggle').textContent = 'Ⅱ'; } else { audio.pause(); document.querySelector('#toggle').textContent = '▶'; } });
+      document.querySelector('#close').addEventListener('click', () => { audio.pause(); player.classList.remove('show'); activeIndex = null; render(search.value); });
+      audio.addEventListener('ended', () => { document.querySelector('#toggle').textContent = '▶'; });
+      let avatarClicks = 0;
+      avatarButton.addEventListener('click', () => { const isFlipped = avatarButton.classList.toggle('flipped'); avatarButton.setAttribute('aria-pressed', String(isFlipped)); avatarClicks += 1; if (avatarClicks % 5 === 0) { document.body.classList.toggle('disco-mode'); const toast = document.querySelector('#easter-toast'); toast.classList.add('show'); window.setTimeout(() => toast.classList.remove('show'), 2600); } });
+      newsButton.addEventListener('click', () => { document.body.classList.add('news-transition'); newsSection.classList.remove('spotlight'); void newsSection.offsetWidth; newsSection.classList.add('spotlight'); window.setTimeout(() => newsSection.scrollIntoView({behavior:'smooth',block:'center'}), 210); window.setTimeout(() => document.body.classList.remove('news-transition'), 840); });
+      const finishLoading = () => window.setTimeout(() => document.body.classList.add('is-ready'), 1450);
+      if (document.readyState === 'complete') finishLoading(); else window.addEventListener('load', finishLoading, {once:true});
+    </script>
+  </body>
+</html>
+
