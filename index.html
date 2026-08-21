@@ -63,12 +63,12 @@
       .avatar-shell::before,.avatar-shell::after { content:""; position:absolute; border-radius:50%; border:1px solid rgba(231,192,106,.42); inset:-17px; animation:orbit 8s linear infinite; }
       .avatar-shell::after { inset:-38px; border-style:dashed; border-color:rgba(231,192,106,.27); animation-direction:reverse; animation-duration:14s; }
       .avatar-card { width:100%; height:100%; position:relative; transform-style:preserve-3d; transition:transform .8s cubic-bezier(.2,.75,.2,1),scale .35s ease; z-index:1; }
-      .avatar-shell:hover .avatar-card,.avatar-shell:focus-visible .avatar-card { scale:1.065; }
+      .avatar-shell:hover .avatar-card { scale:1.065; }
       .avatar-shell.flipped .avatar-card { transform:rotateY(180deg); }
       .avatar-face { width:100%; height:100%; padding:7px; position:absolute; inset:0; overflow:hidden; border:1px solid var(--cyan); border-radius:50%; background:linear-gradient(135deg,#fff0bd,#795012 45%,#f4ce74); box-shadow:0 0 0 7px rgba(213,173,85,.08),0 0 42px rgba(213,173,85,.32); backface-visibility:hidden; }
       .avatar-front::after { content:""; position:absolute; inset:-90% -55%; background:linear-gradient(112deg,transparent 45%,rgba(255,245,200,.72) 50%,transparent 56%); animation:glint 5s ease-in-out infinite; }
       .avatar-front::before { content:"KLIKNI"; display:grid; place-items:center; position:absolute; inset:7px; z-index:2; border-radius:50%; background:rgba(8,7,4,.7); color:#fff5d5; font:500 13px "DM Mono",monospace; letter-spacing:.15em; opacity:0; transition:opacity .25s ease; }
-      .avatar-shell:hover .avatar-front::before,.avatar-shell:focus-visible .avatar-front::before { opacity:1; }
+      .avatar-shell:hover .avatar-front::before { opacity:1; }
       .avatar-face img { display:block; width:100%; height:100%; border-radius:50%; object-fit:cover; filter:contrast(1.08) saturate(.78) sepia(.12); }
       .avatar-back { display:grid; place-items:center; padding:32px; transform:rotateY(180deg); background:radial-gradient(circle at 33% 25%,#795014 0,transparent 34%),#161006; color:#fff5d5; }
       .avatar-back strong { display:block; font-size:23px; line-height:1; letter-spacing:-.06em; }
@@ -127,7 +127,7 @@
       .track-title { font-size:16px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
       .artist,.duration { color:var(--muted); font-size:14px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
       .duration { font-family:"DM Mono",monospace; font-size:12px; text-align:right; }
-      .listen { color:var(--cyan); font-size:20px; text-decoration:none; text-align:center; opacity:.7; transition:.2s; }
+      .listen { color:var(--cyan); font-size:18px; text-decoration:none; text-align:center; opacity:.7; transition:.2s; }
       .listen:hover { opacity:1; transform:scale(1.2); }
       .empty { padding:44px 0; color:var(--muted); font-family:"DM Mono",monospace; }
       .player { position:fixed; z-index:8; bottom:20px; left:50%; transform:translateX(-50%); width:min(700px,calc(100% - 32px)); padding:12px 14px; background:rgba(12,10,6,.88); backdrop-filter:blur(18px); border:1px solid rgba(231,192,106,.35); display:none; grid-template-columns:auto 1fr auto; align-items:center; gap:12px; box-shadow:0 10px 50px #0008; }
@@ -191,6 +191,10 @@
         .news-meta span { padding:8px 9px; font-size:8px; }
         .random-card { padding:31px 23px; }
       }
+      @media (hover:none) {
+        .avatar-front::before { display:none; }
+        .listen { font-family:"DM Mono",monospace; font-size:10px; letter-spacing:.05em; }
+      }
     </style>
   </head>
   <body>
@@ -226,7 +230,7 @@
       const fmt = seconds => `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, '0')}`;
       const render = query => {
         const filtered = tracks.map((track, index) => ({track, index})).filter(({track}) => `${track.title} ${track.artist}`.toLowerCase().includes(query.toLowerCase()));
-        tracksEl.innerHTML = filtered.length ? filtered.map(({track, index}) => `<article class="track ${activeIndex === index ? 'active' : ''}" data-index="${index}"><span class="number">${String(index + 1).padStart(2, '0')}</span><img class="cover" src="${track.image}" alt="" loading="lazy" /><div class="track-title">${track.title}</div><div class="artist">${track.artist}</div><div class="duration">${fmt(track.duration)}</div><a class="listen" href="${track.url}" target="_blank" rel="noreferrer" aria-label="Otvoriť v Spotify">↗</a></article>`).join('') : '<div class="empty">ŽIADNY SIGNÁL SA NENAŠIEL.</div>';
+        tracksEl.innerHTML = filtered.length ? filtered.map(({track, index}) => `<article class="track ${activeIndex === index ? 'active' : ''}" data-index="${index}"><span class="number">${String(index + 1).padStart(2, '0')}</span><img class="cover" src="${track.image}" alt="" loading="lazy" /><div class="track-title">${track.title}</div><div class="artist">${track.artist}</div><div class="duration">${fmt(track.duration)}</div><a class="listen" href="${track.url}" target="_blank" rel="noreferrer" aria-label="Otvoriť v Spotify">OTVOR</a></article>`).join('') : '<div class="empty">ŽIADNY SIGNÁL SA NENAŠIEL.</div>';
       };
       const play = index => {
         const track = tracks[index]; activeIndex = index; render(search.value); player.classList.add('show');
