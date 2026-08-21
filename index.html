@@ -106,7 +106,7 @@
       @keyframes glint { 0%,65%,100% { transform:translateX(-80%) rotate(8deg); } 83% { transform:translateX(80%) rotate(8deg); } }
       .news-section { padding:86px 0 20px; }
       .news-card { position:relative; overflow:hidden; padding:clamp(31px,5vw,64px); border:1px solid rgba(231,192,106,.32); background:linear-gradient(115deg,rgba(231,192,106,.13),rgba(30,22,8,.62) 52%,rgba(5,5,4,.66)); }
-      .news-card::after { content:""; position:absolute; top:0; right:8%; width:1px; height:100%; background:linear-gradient(transparent,var(--cyan),transparent); opacity:.7; }
+      .news-card::after { display:none; }
       .weekly-pick { display:grid; grid-template-columns:1fr auto; gap:8px 20px; align-items:center; margin:30px 0 0; padding:18px 20px; border:1px solid rgba(231,192,106,.3); background:rgba(5,4,2,.33); }
       .weekly-pick p { grid-column:1/-1; margin:0; color:var(--cyan); font:10px "DM Mono",monospace; letter-spacing:.12em; }
       .weekly-pick strong { display:block; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:18px; }
