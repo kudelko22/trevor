@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#060813" />
+    <link rel="manifest" href="./manifest.webmanifest" />
     <title>TREVOR // HUDEBNÝ ARCHÍV</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -26,6 +27,17 @@
       .loader-track span { display:block; width:44%; height:100%; background:linear-gradient(90deg,transparent,#f8d87e,#fff9df); box-shadow:0 0 24px #f8d87e; animation:loader-scan 1.45s cubic-bezier(.72,0,.28,1) infinite; }
       .loader-number { display:block; margin-top:13px; text-align:right; color:#dfba61; font:11px "DM Mono",monospace; letter-spacing:.13em; animation:loader-count 1.45s steps(4,end) infinite; }
       .is-ready .preloader { opacity:0; visibility:hidden; pointer-events:none; }
+      .welcome-modal { position:fixed; inset:0; z-index:88; display:grid; place-items:center; padding:22px; background:rgba(5,4,2,.94); opacity:0; visibility:hidden; pointer-events:none; transition:.45s ease; }
+      .welcome-modal.open { opacity:1; visibility:visible; pointer-events:auto; }
+      .welcome-card { width:min(520px,100%); padding:clamp(32px,7vw,68px); text-align:center; border:1px solid var(--cyan); background:radial-gradient(circle at 50% 0,rgba(231,192,106,.25),transparent 46%),#100c05; box-shadow:0 0 0 1px rgba(231,192,106,.08),0 24px 100px #000; animation:welcome-card .9s cubic-bezier(.2,.8,.2,1) both; }
+      .welcome-kicker { margin:0 0 20px; color:var(--cyan); font:11px "DM Mono",monospace; letter-spacing:.18em; }
+      .welcome-card h2 { font-size:clamp(64px,14vw,112px); line-height:.76; }
+      .welcome-card h2 span { color:transparent; -webkit-text-stroke:1px rgba(255,244,197,.8); }
+      .welcome-card p:not(.welcome-kicker) { margin:22px 0 27px; color:#d8d0bf; font-size:17px; }
+      .name-input { width:100%; padding:14px 0; border:0; border-bottom:1px solid var(--line); outline:0; color:var(--ink); background:transparent; text-align:center; font:16px "Space Grotesk",sans-serif; }
+      .name-input::placeholder { color:var(--muted); }
+      .welcome-enter { width:100%; min-height:48px; margin-top:24px; border:1px solid var(--cyan); color:#171005; background:var(--lime); font:500 10px "DM Mono",monospace; letter-spacing:.1em; cursor:pointer; }
+      @keyframes welcome-card { from { opacity:0; transform:translateY(18px) scale(.96); } to { opacity:1; transform:none; } }
       .cinematic-sweep { position:fixed; inset:0; z-index:90; pointer-events:none; opacity:0; background:linear-gradient(105deg,transparent 34%,rgba(255,240,177,.04) 43%,rgba(255,231,128,.66) 49%,#fff8d8 50%,rgba(255,231,128,.66) 51%,rgba(255,240,177,.04) 57%,transparent 66%); transform:translateX(-115%); }
       .cinematic-sweep.active { animation:cinematic-sweep 1.65s cubic-bezier(.65,0,.2,1) both; }
       .cinematic-ready main { animation:cinematic-main 1.35s cubic-bezier(.2,.8,.2,1) both; }
@@ -95,6 +107,12 @@
       .news-section { padding:86px 0 20px; }
       .news-card { position:relative; overflow:hidden; padding:clamp(31px,5vw,64px); border:1px solid rgba(231,192,106,.32); background:linear-gradient(115deg,rgba(231,192,106,.13),rgba(30,22,8,.62) 52%,rgba(5,5,4,.66)); }
       .news-card::after { content:""; position:absolute; top:0; right:8%; width:1px; height:100%; background:linear-gradient(transparent,var(--cyan),transparent); opacity:.7; }
+      .weekly-pick { display:grid; grid-template-columns:1fr auto; gap:8px 20px; align-items:center; margin:30px 0 0; padding:18px 20px; border:1px solid rgba(231,192,106,.3); background:rgba(5,4,2,.33); }
+      .weekly-pick p { grid-column:1/-1; margin:0; color:var(--cyan); font:10px "DM Mono",monospace; letter-spacing:.12em; }
+      .weekly-pick strong { display:block; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:18px; }
+      .weekly-pick span { color:var(--muted); font:11px "DM Mono",monospace; }
+      .weekly-play { grid-row:2 / span 2; grid-column:2; min-height:40px; padding:0 13px; border:1px solid var(--cyan); color:var(--lime); background:transparent; font:10px "DM Mono",monospace; cursor:pointer; }
+      .weekly-play:hover { color:#171005; background:var(--lime); }
       .news-card h2 { max-width:700px; }
       .news-card p { max-width:600px; margin:24px 0 0; color:#d8d0bf; font-size:clamp(17px,2vw,22px); line-height:1.42; }
       .news-meta { display:flex; flex-wrap:wrap; gap:12px; margin-top:33px; }
@@ -158,6 +176,23 @@
       .ranking-item b { color:var(--cyan); font:12px "DM Mono",monospace; }
       .ranking-item strong { white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
       .ranking-item span { color:var(--muted); font:10px "DM Mono",monospace; }
+      .visitor-stats { display:flex; flex-wrap:wrap; gap:9px; margin-top:24px; }
+      .visitor-stats span { padding:8px 10px; border:1px solid var(--line); color:var(--muted); font:9px "DM Mono",monospace; }
+      .qr-section { display:grid; grid-template-columns:1fr auto; gap:35px; align-items:center; padding:38px 0 100px; border-top:1px solid var(--line); }
+      .qr-section p:not(.eyebrow) { max-width:520px; margin:18px 0 0; color:#d8d0bf; font-size:17px; line-height:1.45; }
+      .qr-frame { padding:10px; border:1px solid var(--cyan); background:#fff8e7; box-shadow:0 0 30px rgba(231,192,106,.2); }
+      .qr-frame img { display:block; width:130px; height:130px; }
+      .notification { position:fixed; z-index:82; top:18px; left:50%; display:flex; align-items:center; gap:18px; width:min(470px,calc(100% - 28px)); padding:13px 15px; border:1px solid var(--cyan); background:rgba(16,12,5,.94); box-shadow:0 16px 50px #0009; color:#fff5d5; font:10px "DM Mono",monospace; transform:translate(-50%,-150%); transition:transform .45s cubic-bezier(.2,.8,.2,1); }
+      .notification.show { transform:translate(-50%,0); }
+      .notification span { flex:1; }
+      .notification button { border:0; background:transparent; color:var(--muted); font-size:20px; cursor:pointer; }
+      .visualizer { display:flex; align-items:end; gap:3px; height:12px; margin-top:5px; }
+      .visualizer i { display:block; width:3px; height:4px; background:var(--lime); }
+      .visualizer.active i { animation:visualizer 1s ease-in-out infinite alternate; }
+      .visualizer i:nth-child(2) { animation-delay:-.2s; }
+      .visualizer i:nth-child(3) { animation-delay:-.5s; }
+      .visualizer i:nth-child(4) { animation-delay:-.35s; }
+      @keyframes visualizer { to { height:12px; box-shadow:0 0 8px var(--lime); } }
       footer { border-top:1px solid var(--line); padding:25px 0 42px; display:flex; justify-content:space-between; gap:20px; color:var(--muted); font:10px "DM Mono",monospace; letter-spacing:.08em; }
       @media (max-width:700px) {
         .avatar-front::before { content:none !important; display:none !important; }
@@ -204,6 +239,12 @@
         .ranking { padding-bottom:62px; }
         .ranking-item { grid-template-columns:28px 1fr auto; gap:9px; padding:12px 0; }
         .ranking-item strong { font-size:13px; }
+        .weekly-pick { grid-template-columns:1fr auto; gap:7px 10px; padding:15px; }
+        .weekly-pick strong { font-size:15px; }
+        .weekly-pick span { font-size:9px; }
+        .weekly-play { padding:0 9px; font-size:8px; }
+        .qr-section { grid-template-columns:1fr; gap:25px; padding-bottom:62px; }
+        .qr-frame { justify-self:center; }
         footer { display:block; padding:22px 0 30px; font-size:8px; line-height:1.7; }
         footer span { display:block; }
       }
@@ -227,23 +268,26 @@
   <body>
     <div class="preloader" role="status" aria-label="Načítava sa Trevor"><div class="loader-content"><p class="loader-kicker">SIGNÁL SA PRIPÁJA</p><h2 class="loader-logo">TREVOR</h2><p class="loader-subtitle">PRIPRAVUJEME SPOLOČNÚ VLNU</p><div class="loader-track"><span></span></div><span class="loader-number">NAČÍTAVANIE_</span></div></div>
     <div class="cinematic-sweep" aria-hidden="true"></div>
+    <div class="welcome-modal" id="welcome-modal" role="dialog" aria-modal="true" aria-labelledby="welcome-title"><div class="welcome-card"><p class="welcome-kicker">OSOBNÝ VSTUP DO ARCHÍVU</p><p id="welcome-title">Vitaj, <span id="welcome-name">návštevník</span>, v</p><h2>Tre<span>vor</span></h2><input class="name-input" id="name-input" type="text" maxlength="24" placeholder="Napíš svoje meno" autocomplete="nickname" /><button class="welcome-enter" id="welcome-enter" type="button">VSTÚPIŤ DO TREVORU</button></div></div>
     <div class="backdrop"><div class="orb"></div><div class="orb two"></div></div>
     <main class="frame">
       <header class="topbar"><div class="brand"><i class="brand-mark"></i>TREVOR // HUDEBNÝ ARCHÍV</div><div class="top-actions"><div class="status">● NAŽIVO ZO SPOTIFY</div><button class="news-button" id="news-button" type="button">NOVINKY ↘</button></div><div>OD ROKU 2026</div></header>
       <section class="hero">
-        <div><p class="eyebrow">PLAYLIST_2JvPlBnk1A6N3Dig5bPpyB</p><h1>Tre<span>vor</span></h1></div>
+        <div><p class="eyebrow" id="visitor-greeting">VITAJ V TREVOROVOM ARCHÍVE</p><h1>Tre<span>vor</span></h1></div>
         <div class="hero-bottom"><p class="intro">Playlist pre lepší deň. Od Lúčnice cez sovietsku hymnu až po skupinu ABBA — nič tu nie je náhoda.</p><div class="hero-actions"><button class="random-button" id="random-button" type="button">NÁHODNÝ TREVOR ✦</button><a class="cta" href="https://open.spotify.com/playlist/2JvPlBnk1A6N3Dig5bPpyB?si=2d2e8090afe04d38" target="_blank" rel="noreferrer">OTVORIŤ V SPOTIFY ↗</a></div></div>
       </section>
       <section class="stats"><div class="stat"><b id="count">55</b><span>skladieb v archíve</span></div><div class="stat"><b id="length">--:--</b><span>spoločných minút</span></div><div class="stat"><b>1</b><span>spoločný cieľ</span></div></section>
-      <section class="origin" aria-labelledby="origin-title"><button class="avatar-shell" id="trevor-avatar" type="button" aria-label="Otočiť Trevorov profilový obraz" aria-pressed="false"><span class="avatar-card"><span class="avatar-face avatar-front"><img src="./trevor-profile.jpg" alt="Profilový obraz Trevora" /></span><span class="avatar-face avatar-back"><span><strong>Ďakujeme<br>za podporu.</strong><span>Spolu tvoríme stránku Trevor.</span></span></span></span></button><div class="origin-copy"><p class="eyebrow">PREČO TREVOR VZNIKOL</p><h2 id="origin-title">Hudba má ľudí spájať.</h2><p>Trevor vznikol z jednoduchej myšlienky: aj tá najnečakanejšia skladba dokáže vytvoriť spoločnú chvíľu. Je to miesto pre úsmev, spomienku a hudbu, pri ktorej sa ľudia stretnú na jednej vlne.</p><div class="origin-signature">JEDEN PLAYLIST · SPOJENÍ ĽUDIA</div></div></section>
-      <section class="news-section" id="news" aria-labelledby="news-title"><div class="news-card"><p class="eyebrow">NOVINKY // PRIPRAVUJEME</p><h2 id="news-title">Nasledujúce piesne.</h2><p>Trevorov archív rastie ďalej. Nové skladby a ďalšie hudobné objavy sa čoskoro pripoja k spoločnej vlne.</p><div class="news-meta"><span>ČOSKORO</span><span>VÝBER TREVORA</span><span>NOVÝ PRENOS</span></div><div class="vote-panel"><h3>Hlasuj za ďalší prírastok.</h3><p>Jeden hlas, jeden smer pre Trevorov ďalší prenos.</p><div class="vote-options"><button class="vote-option" type="button" data-vote="retro"><span>RETRO SIGNÁL</span><strong>Sarà perché ti amo · 0</strong></button><button class="vote-option" type="button" data-vote="electro"><span>ELEKTRO SIGNÁL</span><strong>Xenogenesis · 0</strong></button><button class="vote-option" type="button" data-vote="classic"><span>KLASICKÝ SIGNÁL</span><strong>Hungarian Dance No. 5 · 0</strong></button></div><p class="vote-message" id="vote-message" aria-live="polite"></p></div></div></section>
+      <section class="origin" aria-labelledby="origin-title"><button class="avatar-shell" id="trevor-avatar" type="button" aria-label="Otočiť Trevorov profilový obraz" aria-pressed="false"><span class="avatar-card"><span class="avatar-face avatar-front"><img src="./trevor-profile.jpg" alt="Profilový obraz Trevora" /></span><span class="avatar-face avatar-back"><span><strong>Ďakujeme<br>za podporu.</strong><span>Spolu tvoríme stránku Trevor.</span></span></span></span></button><div class="origin-copy"><p class="eyebrow">PREČO TREVOR VZNIKOL</p><h2 id="origin-title">Hudba má ľudí spájať.</h2><p>Trevor vznikol z jednoduchej myšlienky: aj tá najnečakanejšia skladba dokáže vytvoriť spoločnú chvíľu. Je to miesto pre úsmev, spomienku a hudbu, pri ktorej sa ľudia stretnú na jednej vlne.</p><div class="origin-signature">JEDEN PLAYLIST · SPOJENÍ ĽUDIA</div><div class="visitor-stats"><span id="visitor-play-count">0 PREHRANÍ</span><span id="visitor-vote-status">HLAS EŠTE NEBOL ODOVZDANÝ</span></div></div></section>
+      <section class="news-section" id="news" aria-labelledby="news-title"><div class="news-card"><p class="eyebrow">NOVINKY // PRIPRAVUJEME</p><h2 id="news-title">Nasledujúce piesne.</h2><p>Trevorov archív rastie ďalej. Nové skladby a ďalšie hudobné objavy sa čoskoro pripoja k spoločnej vlne.</p><div class="weekly-pick"><p>VÝBER TÝŽDŇA</p><strong id="weekly-title">Pripravujem výber...</strong><span id="weekly-artist"></span><button class="weekly-play" id="weekly-play" type="button">PREHRAŤ</button></div><div class="news-meta"><span>ČOSKORO</span><span>VÝBER TREVORA</span><span>NOVÝ PRENOS</span></div><div class="vote-panel"><h3>Hlasuj za ďalší prírastok.</h3><p>Jeden hlas, jeden smer pre Trevorov ďalší prenos.</p><div class="vote-options"><button class="vote-option" type="button" data-vote="retro"><span>RETRO SIGNÁL</span><strong>Sarà perché ti amo · 0</strong></button><button class="vote-option" type="button" data-vote="electro"><span>ELEKTRO SIGNÁL</span><strong>Xenogenesis · 0</strong></button><button class="vote-option" type="button" data-vote="classic"><span>KLASICKÝ SIGNÁL</span><strong>Hungarian Dance No. 5 · 0</strong></button></div><p class="vote-message" id="vote-message" aria-live="polite"></p></div></div></section>
       <section class="archive" id="archive"><div class="section-head"><div><p class="eyebrow">CELÝ PRENOS</p><h2>Všetky skladby.</h2></div><input class="search" id="search" type="search" placeholder="Hľadať skladbu..." /></div><div class="track-list" id="tracks"></div></section>
       <section class="ranking" aria-labelledby="ranking-title"><p class="eyebrow">LOKÁLNY REBRÍČEK</p><h2 id="ranking-title">Najpočúvanejšie.</h2><div class="ranking-list" id="ranking"></div></section>
+      <section class="qr-section" aria-labelledby="qr-title"><div><p class="eyebrow">TREVOR VO VRECKU</p><h2 id="qr-title">Naskenuj a spoj sa.</h2><p>Otvor Trevor okamžite na telefóne. QR kód vedie priamo na verejnú stránku archívu.</p></div><div class="qr-frame"><img id="qr-code" alt="QR kód stránky Trevor" /></div></section>
       <footer><span>© 2026 TREVOR · VŠETKY PRÁVA VYHRADENÉ</span><span>VYTVORIL KUDELKO22</span></footer>
     </main>
     <div class="random-modal" id="random-modal" role="dialog" aria-modal="true" aria-labelledby="random-title"><div class="random-card"><button class="modal-close" id="modal-close" type="button" aria-label="Zavrieť náhodný výber">×</button><p class="eyebrow">NÁHODNÝ TREVOR VYBRAL</p><h2 id="random-title">Pripravujem výber...</h2><p class="random-artist" id="random-artist"></p><a class="cta" id="random-spotify" href="#" target="_blank" rel="noreferrer">POČÚVAŤ V SPOTIFY ↗</a></div></div>
     <div class="easter-toast" id="easter-toast" role="status">DISCO REŽIM AKTIVOVANÝ ✦</div>
-    <div class="player" id="player"><button class="player-nav" id="previous" aria-label="Predchádzajúca skladba">‹</button><button class="play-button" id="toggle" aria-label="Prehrať alebo pauznúť">Ⅱ</button><div><div class="now-title" id="now-title"></div><div class="now-sub" id="now-sub">30S PREVIEW · SPOTIFY</div><div class="progress" id="progress" aria-label="Pozícia skladby"><span id="progress-bar"></span></div></div><button class="player-nav" id="next" aria-label="Nasledujúca skladba">›</button><button class="close" id="close" aria-label="Zavrieť prehrávač">×</button><audio id="audio"></audio></div>
+    <div class="notification" id="notification" role="status"><span id="notification-text"></span><button id="notification-close" aria-label="Zavrieť upozornenie">×</button></div>
+    <div class="player" id="player"><button class="player-nav" id="previous" aria-label="Predchádzajúca skladba">‹</button><button class="play-button" id="toggle" aria-label="Prehrať alebo pauznúť">Ⅱ</button><div><div class="now-title" id="now-title"></div><div class="now-sub" id="now-sub">30S PREVIEW · SPOTIFY</div><div class="visualizer" id="visualizer" aria-hidden="true"><i></i><i></i><i></i><i></i></div><div class="progress" id="progress" aria-label="Pozícia skladby"><span id="progress-bar"></span></div></div><button class="player-nav" id="next" aria-label="Nasledujúca skladba">›</button><button class="close" id="close" aria-label="Zavrieť prehrávač">×</button><audio id="audio"></audio></div>
     <script>
       const tracksEl = document.querySelector('#tracks');
       const search = document.querySelector('#search');
@@ -258,15 +302,27 @@
       const rankingEl = document.querySelector('#ranking');
       const progress = document.querySelector('#progress');
       const progressBar = document.querySelector('#progress-bar');
+      const visualizer = document.querySelector('#visualizer');
+      const welcomeModal = document.querySelector('#welcome-modal');
+      const nameInput = document.querySelector('#name-input');
+      const visitorGreeting = document.querySelector('#visitor-greeting');
+      const weeklyTitle = document.querySelector('#weekly-title');
+      const weeklyArtist = document.querySelector('#weekly-artist');
+      const notification = document.querySelector('#notification');
+      const notificationText = document.querySelector('#notification-text');
       let tracks = [], activeIndex = null;
       const fmt = seconds => `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, '0')}`;
+      const visitorName = () => localStorage.getItem('trevor-name') || 'návštevník';
+      const updateVisitor = () => { const name = visitorName(); document.querySelector('#welcome-name').textContent = name; nameInput.value = name === 'návštevník' ? '' : name; visitorGreeting.textContent = `VITAJ, ${name.toUpperCase()}, V TREVOROVOM ARCHÍVE`; const plays = Object.values(JSON.parse(localStorage.getItem('trevor-plays') || '{}')).reduce((sum, count) => sum + count, 0); document.querySelector('#visitor-play-count').textContent = `${plays} PREHRANÍ`; document.querySelector('#visitor-vote-status').textContent = localStorage.getItem('trevor-vote') ? 'HLAS ODOVZDANÝ' : 'HLAS EŠTE NEBOL ODOVZDANÝ'; };
+      const showNotification = message => { notificationText.textContent = message; notification.classList.add('show'); window.setTimeout(() => notification.classList.remove('show'), 6500); };
+      const renderWeeklyPick = () => { if (!tracks.length) return; const weeklyIndex = Math.floor(Date.now() / 604800000) % tracks.length; const track = tracks[weeklyIndex]; weeklyTitle.textContent = track.title; weeklyArtist.textContent = track.artist; document.querySelector('#weekly-play').dataset.index = weeklyIndex; };
       const render = query => {
         const filtered = tracks.map((track, index) => ({track, index})).filter(({track}) => `${track.title} ${track.artist}`.toLowerCase().includes(query.toLowerCase()));
         tracksEl.innerHTML = filtered.length ? filtered.map(({track, index}) => `<article class="track ${activeIndex === index ? 'active' : ''}" data-index="${index}"><span class="number">${String(index + 1).padStart(2, '0')}</span><img class="cover" src="${track.image}" alt="" loading="lazy" /><div class="track-title">${track.title}</div><div class="artist">${track.artist}</div><div class="duration">${fmt(track.duration)}</div><a class="listen" href="${track.url}" target="_blank" rel="noreferrer" aria-label="Otvoriť v Spotify">OTVOR</a></article>`).join('') : '<div class="empty">ŽIADNY SIGNÁL SA NENAŠIEL.</div>';
       };
       const play = index => {
         const track = tracks[index]; activeIndex = index; render(search.value); player.classList.add('show');
-        const plays = JSON.parse(localStorage.getItem('trevor-plays') || '{}'); plays[index] = (plays[index] || 0) + 1; localStorage.setItem('trevor-plays', JSON.stringify(plays)); renderRanking();
+        const plays = JSON.parse(localStorage.getItem('trevor-plays') || '{}'); plays[index] = (plays[index] || 0) + 1; localStorage.setItem('trevor-plays', JSON.stringify(plays)); renderRanking(); updateVisitor();
         document.querySelector('#now-title').textContent = `${track.title} — ${track.artist}`;
         if (track.preview) { audio.src = track.preview; audio.play(); document.querySelector('#toggle').textContent = 'Ⅱ'; }
         else { window.open(track.url, '_blank', 'noopener'); }
@@ -291,7 +347,8 @@
       fetch('./tracks.json?v=' + Date.now(), {cache:'no-store'}).then(response => response.json()).then(data => {
         tracks = data; document.querySelector('#count').textContent = tracks.length;
         document.querySelector('#length').textContent = fmt(tracks.reduce((total, track) => total + track.duration, 0));
-        render(''); renderRanking();
+        render(''); renderRanking(); renderWeeklyPick();
+        const knownTracks = JSON.parse(localStorage.getItem('trevor-known-tracks') || 'null'); const currentTracks = tracks.map(track => track.url); if (knownTracks) { const added = currentTracks.filter(url => !knownTracks.includes(url)); if (added.length) showNotification(`${added.length} NOV${added.length === 1 ? 'Á SKLADBA' : 'É SKLADBY'} V TREVOROVOM ARCHÍVE`); } localStorage.setItem('trevor-known-tracks', JSON.stringify(currentTracks));
       }).catch(() => tracksEl.innerHTML = '<div class="empty">ARCHÍV SA NEPODARILO NAČÍTAŤ. SPUSŤ STRÁNKU CEZ LOKÁLNY SERVER.</div>');
       tracksEl.addEventListener('click', event => { if (!event.target.closest('.listen')) { const row = event.target.closest('.track'); if (row) play(Number(row.dataset.index)); } });
       search.addEventListener('input', () => render(search.value));
@@ -299,18 +356,27 @@
       document.querySelector('#modal-close').addEventListener('click', () => randomModal.classList.remove('open'));
       randomModal.addEventListener('click', event => { if (event.target === randomModal) randomModal.classList.remove('open'); });
       updateVotes();
-      voteButtons.forEach(button => button.addEventListener('click', () => { if (selectedVote) return; const key = button.dataset.vote; votes[key] = (votes[key] || 0) + 1; selectedVote = key; localStorage.setItem('trevor-votes', JSON.stringify(votes)); localStorage.setItem('trevor-vote', key); document.querySelector('#vote-message').textContent = 'VĎAKA — HLASOVAL SI. ĎALŠÍ HLAS Z TOHTO ZARIADENIA UŽ NIE JE MOŽNÝ.'; updateVotes(); }));
+      voteButtons.forEach(button => button.addEventListener('click', () => { if (selectedVote) return; const key = button.dataset.vote; votes[key] = (votes[key] || 0) + 1; selectedVote = key; localStorage.setItem('trevor-votes', JSON.stringify(votes)); localStorage.setItem('trevor-vote', key); document.querySelector('#vote-message').textContent = 'VĎAKA — HLASOVAL SI. ĎALŠÍ HLAS Z TOHTO ZARIADENIA UŽ NIE JE MOŽNÝ.'; updateVotes(); updateVisitor(); }));
+      document.querySelector('#weekly-play').addEventListener('click', event => play(Number(event.currentTarget.dataset.index)));
+      document.querySelector('#notification-close').addEventListener('click', () => notification.classList.remove('show'));
+      document.querySelector('#welcome-enter').addEventListener('click', () => { const name = nameInput.value.trim() || 'návštevník'; localStorage.setItem('trevor-name', name); updateVisitor(); welcomeModal.classList.remove('open'); });
+      nameInput.addEventListener('keydown', event => { if (event.key === 'Enter') document.querySelector('#welcome-enter').click(); });
       document.querySelector('#toggle').addEventListener('click', () => { if (audio.paused) { audio.play(); document.querySelector('#toggle').textContent = 'Ⅱ'; } else { audio.pause(); document.querySelector('#toggle').textContent = '▶'; } });
       document.querySelector('#previous').addEventListener('click', () => playRelative(-1));
       document.querySelector('#next').addEventListener('click', () => playRelative(1));
       document.querySelector('#close').addEventListener('click', () => { audio.pause(); player.classList.remove('show'); activeIndex = null; render(search.value); });
       audio.addEventListener('timeupdate', () => { progressBar.style.width = audio.duration ? `${audio.currentTime / audio.duration * 100}%` : '0%'; });
       progress.addEventListener('click', event => { if (!audio.duration) return; const box = progress.getBoundingClientRect(); audio.currentTime = ((event.clientX - box.left) / box.width) * audio.duration; });
-      audio.addEventListener('ended', () => { document.querySelector('#toggle').textContent = '▶'; });
+      audio.addEventListener('play', () => visualizer.classList.add('active'));
+      audio.addEventListener('pause', () => visualizer.classList.remove('active'));
+      audio.addEventListener('ended', () => { document.querySelector('#toggle').textContent = '▶'; visualizer.classList.remove('active'); });
       let avatarClicks = 0;
       avatarButton.addEventListener('click', () => { const isFlipped = avatarButton.classList.toggle('flipped'); avatarButton.setAttribute('aria-pressed', String(isFlipped)); avatarClicks += 1; if (avatarClicks % 5 === 0) { document.body.classList.toggle('disco-mode'); const toast = document.querySelector('#easter-toast'); toast.classList.add('show'); window.setTimeout(() => toast.classList.remove('show'), 2600); } });
       newsButton.addEventListener('click', () => { document.body.classList.add('news-transition'); newsSection.classList.remove('spotlight'); void newsSection.offsetWidth; newsSection.classList.add('spotlight'); window.setTimeout(() => newsSection.scrollIntoView({behavior:'smooth',block:'center'}), 210); window.setTimeout(() => document.body.classList.remove('news-transition'), 840); });
-      const finishLoading = () => window.setTimeout(() => { document.body.classList.add('is-ready','cinematic-ready'); document.querySelector('.cinematic-sweep').classList.add('active'); }, 1450);
+      updateVisitor();
+      document.querySelector('#qr-code').src = `https://api.qrserver.com/v1/create-qr-code/?size=260x260&data=${encodeURIComponent('https://kudelko22.github.io/trevor/')}`;
+      const finishLoading = () => window.setTimeout(() => { document.body.classList.add('is-ready','cinematic-ready'); document.querySelector('.cinematic-sweep').classList.add('active'); welcomeModal.classList.add('open'); nameInput.focus(); }, 1450);
+      if ('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js').catch(() => {});
       if (document.readyState === 'complete') finishLoading(); else window.addEventListener('load', finishLoading, {once:true});
     </script>
   </body>
